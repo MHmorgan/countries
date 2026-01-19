@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+set -ex
+
+# Ensure all gradle output goes to stderr - we want stdout only to contain the app output
+gradle installDist 1>&2
+
+./build/install/countries/bin/countries $*
