@@ -7,8 +7,7 @@ import restcountries.RestCountriesClient
 val prettyJson = Json { prettyPrint = true }
 
 fun main(args: Array<String>) {
-    val cfg = Config(apiBase = "https://restcountries.com/v3.1")
-    val client = RestCountriesClient(cfg)
+    val client = RestCountriesClient("https://restcountries.com/v3.1")
 
     try {
         Countries()
