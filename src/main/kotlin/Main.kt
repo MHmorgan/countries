@@ -1,11 +1,28 @@
-import org.slf4j.LoggerFactory
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.subcommands
+import kotlinx.serialization.json.Json
+import restcountries.RestCountriesClient
 
-fun main() {
+val prettyJson = Json { prettyPrint = true }
+
+fun main(args: Array<String>) {
     val cfg = Config(apiBase = "https://restcountries.com/v3.1")
+    val client = RestCountriesClient(cfg)
 
-    val log = LoggerFactory.getLogger("countries")
-    log.info("Countries CLI starting...")
+    try {
+        Countries()
+            .subcommands(RegionCommand(client))
+            .main(args)
+    } finally {
+        client.close()
+    }
+}
 
-    println("Countries CLI starting...")
-    println("Countries CLI - Phase 1 Foundation Complete")
+/**
+ * Root command for the Countries CLI application.
+ * Acts as a container for subcommands.
+ */
+class Countries : CliktCommand(name = "countries") {
+    override fun run() = Unit
 }
