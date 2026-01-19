@@ -1,0 +1,42 @@
+#!/usr/bin/env nu
+
+#  _______        _   
+# |__   __|      | |  
+#    | | ___  ___| |_ 
+#    | |/ _ \/ __| __|
+#    | |  __/\__ \ |_ 
+#    |_|\___||___/\__|
+#
+# Test the application: run the gradle tests and all CLI commands
+# to check if they fail and to manually inspect their visual output.
+
+use std/log
+
+const bin = './build/install/countries/bin/countries'
+
+def main [] {
+    log debug "Run gradle tests..."
+    gradle clean test
+
+    log debug "Build application executable..."
+    gradle installDist
+
+    log debug "Test region with table output"
+    ^$bin region europe --limit 4
+
+    log debug "Test region with JSON output"
+    ^$bin region europe --json
+    | from json
+    | first 4
+    | table
+    | print
+
+    log debug "Test currencies with table output"
+    ^$bin currencies
+
+    log debug "Test currencies with JSON output"
+    ^$bin currencies --json
+    | from json
+    | table 
+    | print
+}

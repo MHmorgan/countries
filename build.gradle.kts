@@ -38,6 +38,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.1")
     testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation("io.ktor:ktor-client-mock:3.1.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
 }
 
 kotlin {

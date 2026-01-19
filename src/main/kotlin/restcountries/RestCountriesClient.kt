@@ -10,13 +10,18 @@ import kotlinx.serialization.json.Json
 
 /**
  * HTTP client for the REST Countries API.
+ *
+ * @param apiBase Base URL for the REST Countries API
+ * @param client HttpClient instance (defaults to CIO engine with JSON support)
  */
-class RestCountriesClient(private val apiBase: String) {
-    private val client = HttpClient(CIO) {
+class RestCountriesClient(
+    private val apiBase: String,
+    private val client: HttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }
     }
+) {
 
     /**
      * Fetches countries by region from the REST Countries API.
