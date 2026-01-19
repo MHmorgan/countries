@@ -1,0 +1,58 @@
+#!/usr/bin/env nu
+
+# ______ _____ _____ _____   _____                   _        _           
+# | ___ \  ___/  ___|_   _| /  __ \                 | |      (_)          
+# | |_/ / |__ \ `--.  | |   | /  \/ ___  _   _ _ __ | |_ _ __ _  ___  ___ 
+# |    /|  __| `--. \ | |   | |    / _ \| | | | '_ \| __| '__| |/ _ \/ __|
+# | |\ \| |___/\__/ / | |   | \__/\ (_) | |_| | | | | |_| |  | |  __/\__ \
+# \_| \_\____/\____/  \_/    \____/\___/ \__,_|_| |_|\__|_|  |_|\___||___/
+#
+# Nushell script to explore the REST countries API
+
+const base = 'https://restcountries.com/v3.1'
+
+def main [] {}
+
+def `main all` [--json] {
+    let url = $base | path join 'all?fields=name,capital,languages,currencies,region,subregion'
+    
+    if $json {
+        http get --raw $url
+    } else {
+        http get $url | explore
+    }
+}
+
+def `main regions` [] {
+    http get ($base | path join 'all?fields=region')
+    | get region
+    | sort
+    | uniq
+}
+
+def `main region` [region, --json] {
+    let url = $base | path join 'region' $region
+    
+    if $json {
+        http get --raw $url
+    } else {
+        http get $url | explore
+    }
+}
+
+def `main subregions` [] {
+    http get ($base | path join 'all?fields=subregion')
+    | get subregion
+    | sort
+    | uniq
+}
+
+def `main subregion` [subregion, --json] {
+    let url = $base | path join 'subregion' $subregion
+    
+    if $json {
+        http get --raw $url
+    } else {
+        http get $url | explore
+    }
+}
