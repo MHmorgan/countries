@@ -15,8 +15,13 @@ import org.junit.jupiter.api.Test
 
 class RestCountriesClientTest {
 
+    /**
+     * URL of the last request made by the mock client.
+     * Works under the assumption that all tests run sequentially.
+     */
     lateinit var lastCalledUrl: String
 
+    /** Create a new test client which returns the given JSON response */
     private fun newClient(json: String): RestCountriesClient {
         val engine = MockEngine { req ->
             lastCalledUrl = req.url.toString()
