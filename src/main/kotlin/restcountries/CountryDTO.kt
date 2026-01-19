@@ -39,7 +39,22 @@ data class CountryDTO(
     val capitalInfo: CapitalInfoDTO? = null,
     val postalCode: PostalCodeDTO? = null,
     val borders: List<String>? = null
-)
+) {
+    val commonName: String?
+        get() = name?.common
+
+}
+
+fun Iterable<CountryDTO>.sort(desc: Boolean) = when {
+    desc -> sortedByDescending { it.commonName }
+    else -> sortedBy { it.commonName }
+}
+
+// -----------------------------------------------------------------------------
+//
+// Nested DTOs
+//
+// -----------------------------------------------------------------------------
 
 @Serializable
 data class NameDTO(

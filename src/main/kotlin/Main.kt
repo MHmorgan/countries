@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
 
     try {
         Countries()
-            .subcommands(RegionCommand(client))
+            .subcommands(RegionCommand(client), CurrenciesCommand(client))
             .main(args)
     } finally {
         client.close()

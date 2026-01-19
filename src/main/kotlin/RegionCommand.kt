@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import restcountries.CountryDTO
 import restcountries.RestCountriesClient
+import restcountries.sort
 import kotlin.system.exitProcess
 
 class RegionCommand(private val client: RestCountriesClient) : CliktCommand(name = "region") {
@@ -27,21 +28,14 @@ class RegionCommand(private val client: RestCountriesClient) : CliktCommand(name
 
     override fun run() {
         try {
-            var countries = runBlocking {
-                client.getByRegion(region)
-            }
+            var dtos = runBlocking { client.getByRegion(region) }
+                .sort(desc)
 
-            countries = if (desc) {
-                countries.sortedByDescending { it.name?.common ?: "" }
-            } else {
-                countries.sortedBy { it.name?.common ?: "" }
-            }
-
-            if (limit > 0) countries = countries.take(limit)
+            if (limit > 0) dtos = dtos.take(limit)
 
             when {
-                json -> println(prettyJson.encodeToString(countries))
-                else -> printCountryTable(countries)
+                json -> println(prettyJson.encodeToString(dtos))
+                else -> printTable(dtos)
             }
         } catch (e: Exception) {
             log.error("Failed to fetch countries by region", e)
@@ -52,7 +46,7 @@ class RegionCommand(private val client: RestCountriesClient) : CliktCommand(name
     /**
      * Prints a table with country name and currency using Mordant's awesomeTable.
      */
-    private fun printCountryTable(countries: List<CountryDTO>) {
+    private fun printTable(countries: List<CountryDTO>) {
         val table = awesomeTable {
             header {
                 row("Country", "Currency")
@@ -60,7 +54,7 @@ class RegionCommand(private val client: RestCountriesClient) : CliktCommand(name
 
             body {
                 countries.forEach { country ->
-                    val name = country.name?.common
+                    val name = country.commonName
                         ?: error("Missing a name for the country to display")
 
                     val currency = country.currencies

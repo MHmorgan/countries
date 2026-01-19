@@ -27,6 +27,13 @@ class RestCountriesClient(private val apiBase: String) {
         client.get("$apiBase/region/$region").body()
 
     /**
+     * Fetches all countries with only currencies and name fields.
+     * @return List of countries with currencies and name data
+     */
+    suspend fun getAllCurrencies(): List<CountryDTO> =
+        client.get("$apiBase/all?fields=currencies,name").body()
+
+    /**
      * Closes the underlying HTTP client and releases resources.
      */
     fun close() {
